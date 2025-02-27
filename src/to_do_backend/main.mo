@@ -11,10 +11,15 @@ actor {
     concluida : Bool; // Indica se a tarefa foi concluída (true) ou não (false)
   };
 
+  /* Esta variável será utilizada para armazenar o número do último identificador gerado para uma tarefa.
+          Ela será incrementada sempre que uma nova tarefa for adicionada */
   var idTarefa : Nat = 0;
+
+  // Esta estrutura será utilizada para armazenar as "tarefas"
   var tarefas : Buffer.Buffer<Tarefa> = Buffer.Buffer<Tarefa>(10);
 
-  public func addTarefas(cat : Text, desc : Text, urg : Bool, con : Bool) : async () {
+  // Função para adicionar itens ao buffer 'tarefas'.
+  public func addTarefa(desc : Text, cat : Text, urg : Bool, con : Bool) : async () {
 
     idTarefa += 1;
     let t : Tarefa = {
@@ -28,14 +33,26 @@ actor {
     tarefas.add(t);
   };
 
+  // Função para remover itens ao buffer 'tarefas'.
   public func excluirTarefa(idExcluir : Nat) : async () {
+
     func localizaExcluir(i : Nat, x : Tarefa) : Bool {
       return x.id != idExcluir;
     };
+
     tarefas.filterEntries(localizaExcluir);
+
   };
 
-  public func alterartarefa(idTar : Nat, cat : Text, desc : Text, urg : Bool, con : Bool) : async () {
+  // Função para alterar itens ao buffer 'tarefas'.
+  public func alterarTarefa(
+    idTar : Nat,
+    cat : Text,
+    desc : Text,
+    urg : Bool,
+    con : Bool,
+  ) : async () {
+
     let t : Tarefa = {
       id = idTar;
       categoria = cat;
@@ -58,11 +75,11 @@ actor {
         tarefas.put(i, t);
       };
     };
+
   };
 
-  //Esta função irá retornar todas as tarefas do Buffer.
+  // Função para retornar os itens do buffer 'tarefas'.
   public func getTarefas() : async [Tarefa] {
     return Buffer.toArray(tarefas);
   };
-
 };

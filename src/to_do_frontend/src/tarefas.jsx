@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { to_do_backend } from 'declarations/to_do_backend';
 
 function tarefas() {
-
     const [tarefas, setTarefas] = useState([]);
 
     async function consultarTarefas() {
@@ -17,6 +16,9 @@ function tarefas() {
         const descricao = event.target.elements.descricao.value;
         const urgente = ((event.target.elements.urgente.value === "false") ? false : true);
 
+        /* Caso o idTarefa for null significa que é um novo cadastro,
+           desta forma será executada a função addTarefa do Canister de backend,
+           caso contrário será executada a função de alteração dos dados de uma tarefa */
         if (idTarefa === null || idTarefa === "") {
             await to_do_backend.addTarefa(descricao, categoria, false, false);
         } else {
@@ -35,7 +37,7 @@ function tarefas() {
     return (
 
         <main class="mt-[30px] mx-[30px]">
-            <form id="formTarefas" class="flex space-x-4">
+            <form id="formTarefas" class="flex space-x-4" onSubmit={handleSubmit}>
                 <div class="w-[15%]">
                     <select id="categoria" class="block w-full px-4 py-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected>Categoria</option>
