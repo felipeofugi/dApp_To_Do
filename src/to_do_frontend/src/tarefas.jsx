@@ -3,9 +3,13 @@ import { to_do_backend } from 'declarations/to_do_backend';
 
 function tarefas() {
     const [tarefas, setTarefas] = useState([]);
+    const [quantidadeAndamento, setQuantidadeAndamento] = useState([]);
+    const [quantidadeConcluida, setQuantidadeConcluidas] = useState([]);
 
     useEffect(() => {
         consultarTarefas();
+        totalTarefasEmAndamento();
+        totalTarefasConcluidas();
     }, []);
 
     async function consultarTarefas() {
@@ -30,6 +34,8 @@ function tarefas() {
         }
 
         consultarTarefas();
+        totalTarefasEmAndamento();
+        totalTarefasConcluidas();
 
         event.target.elements.idTarefa.value = "";
         event.target.elements.categoria.value = "";
@@ -41,11 +47,15 @@ function tarefas() {
     async function excluir(id) {
         await to_do_backend.excluirTarefa(parseInt(id));
         consultarTarefas();
+        totalTarefasEmAndamento();
+        totalTarefasConcluidas();
     }
 
     async function alterar(id, categoria, descricao, urgente, concluida) {
         await to_do_backend.alterarTarefa(parseInt(id), categoria, descricao, urgente, concluida);
         consultarTarefas();
+        totalTarefasEmAndamento();
+        totalTarefasConcluidas();
     }
 
     async function editar(id, categoria, descricao, urgente) {
@@ -55,6 +65,21 @@ function tarefas() {
         document.getElementById('formTarefas').elements['urgente'].value = urgente;
     }
 
+    async function totalTarefasEmAndamento() {
+        try {
+            setQuantidadeAndamento(parseInt(await to_do_backend.totalTarefasEmAndamento()));
+        } catch (error) {
+            console.error("Erro ao buscar quantidade de tarefas em andamento: ", error);
+        }
+    }
+
+    async function totalTarefasConcluidas() {
+        try {
+            setQuantidadeConcluidas(parseInt(await to_do_backend.totalTarefasConcluidas()));
+        } catch (error) {
+            console.error("Erro ao buscar quantidade de tarefas concluidas: ", error);
+        }
+    }
 
     return (
 
@@ -158,6 +183,12 @@ function tarefas() {
 
             <br />
 
+            <div class="flex items-center justify-center w-[100%] relative">
+                <p id="contador" class="text-sm absolute right-2.5 font-bold leading-none text-gray-900 dark:text-white">TOTAL {quantidadeAndamento}</p>
+            </div>
+
+            <br />
+
             <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div class="flex items-center justify-between mb-4">
                     <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Tarefas concluídas</h5>
@@ -197,6 +228,12 @@ function tarefas() {
 
                     </ul>
                 </div>
+            </div>
+
+            <br />
+
+            <div class="flex items-center justify-center w-[100%] relative">
+                <p class="text-sm absolute right-2.5 font-bold leading-none text-gray-900 dark:text-white">TOTAL {quantidadeConcluida}</p>
             </div>
 
         </main>

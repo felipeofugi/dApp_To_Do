@@ -1,6 +1,7 @@
 import Buffer "mo:base/Buffer";
 import Bool "mo:base/Bool";
 import Text "mo:base/Text";
+import Nat "mo:base/Nat";
 actor {
 
   type Tarefa = {
@@ -82,4 +83,27 @@ actor {
   public func getTarefas() : async [Tarefa] {
     return Buffer.toArray(tarefas);
   };
+
+  // Função para retornar a quantidade de tarefas em andamento
+  public func totalTarefasEmAndamento() : async Nat {
+    var counter : Nat = 0;
+    for (values in tarefas.vals()) {
+      if (values.concluida == false) {
+        counter += 1;
+      };
+    };
+    return counter;
+  };
+
+  // Função para retornar a quantidade de tarefas concluídas
+  public func totalTarefasConcluidas() : async Nat {
+    var counter : Nat = 0;
+    for (values in tarefas.vals()) {
+      if (values.concluida == true) {
+        counter += 1;
+      };
+    };
+    return counter;
+  };
+
 };
