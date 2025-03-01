@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { to_do_backend } from 'declarations/to_do_backend';
 
-function tarefas() {
+function Tarefas() {
     const [tarefas, setTarefas] = useState([]);
     const [quantidadeAndamento, setQuantidadeAndamento] = useState([]);
     const [quantidadeConcluida, setQuantidadeConcluidas] = useState([]);
@@ -240,4 +240,4 @@ function tarefas() {
     );
 }
 
-export default tarefas;
+export default Tarefas;
